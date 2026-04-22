@@ -171,12 +171,9 @@ echo "✅ SSH key permissions verified (600/644)."
 # are available both in this script and can be reloaded by the user later.
 if [ -z "${SSH_AUTH_SOCK:-}" ]; then
     echo "🔄 Starting ssh-agent..."
-    eval "$(ssh-agent -s)" > "$AGENT_ENV"
-    chmod 600 "$AGENT_ENV"
-    source "$AGENT_ENV"
-    echo "✅ ssh-agent started."
-    echo "   To reuse this agent in other terminals, run: source $AGENT_ENV"
-    echo "   To load it automatically, add to ~/.bashrc: [ -f $AGENT_ENV ] && source $AGENT_ENV"
+    eval "$(ssh-agent -s)" > /dev/null
+    ssh-add "$SSH_KEY"
+    echo "✅ ssh-agent started and key added."
 else
     echo "✅ ssh-agent is already running (PID: ${SSH_AGENT_PID:-unknown})."
 fi
